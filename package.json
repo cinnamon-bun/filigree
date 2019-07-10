@@ -7,7 +7,7 @@
     "filigree": "./cli.js"
   },
   "types": "./dist/filigree.d.ts",
-  "prepublish": "build",
+  "prepublishOnly": "build",
   "scripts": {
     "depgraph": "arkit --exclude dist,public -o depgraph.svg",
     "clean": "rm -f dist/*",
