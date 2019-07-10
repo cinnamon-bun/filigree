@@ -4,7 +4,7 @@
   "description": "A text expansion toolkit",
   "main": "./dist/filigree.js",
   "bin": {
-    "filigree": "./dist/filigree-cli.js"
+    "filigree": "./cli.js"
   },
   "scripts": {
     "depgraph": "arkit --exclude dist,public -o depgraph.svg",
