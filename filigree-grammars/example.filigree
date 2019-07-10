@@ -1,0 +1,45 @@
+# FILIGRE
+# A Filigree file is a list of text-expansion rules.
+
+# Define a rule
+job = candlestick maker
+
+# Randomly choose one of several options with square brackets and "/"
+name = Captain [Moss/Pebble/Twig]
+
+# Reference another rule with angled brackets
+greeting = Hello to <name> who is a <job>.
+
+# Choices can contain more choices and references
+greeting2 = [Hi [there /]<name>/Hello], how are you today?
+
+# To make things occur rarely, use empty choices.
+# The more empty choices, the less often the other choices will appear.
+greeting3 = Hi [there /]<name>.     # "there " happens 1/2 of the time
+greeting4 = Hi [there ////]<name>.  # "there " happens 1/5 of the time
+
+# Trailing whitespace on a line is removed.
+# To make whitespace matter, put it inside choice brackets.
+# You can also make a zero-length string using choice brackets.
+threespaces = [   ]
+nothing = []
+
+# Rules can reference themselves but make sure it's possible for them to eventually stop!
+# This returns "yo yo yo yo!" with a random number of repeats.
+repeat = yo[ <repeat>/!]
+
+# Quote marks have no special meaning; they're just part of your text
+reply = "That's nice," he replied.
+
+a = b   # Comments start with "#" and can go on the same line as a rule.
+
+# Each rule declaration must be on its own line.  TODO: allow them to span lines
+# Blank lines are ignored.
+# The equals sign must have one space on each side.  TODO: fix this
+# Rule names can contain letters, numbers, dashes, and underscores, but not spaces.  Capitalization matters.
+# References can't contain anything nested inside the angle brackets, only plain old rule names
+#   (no "<[cat/dog]Name>")
+# If you see angle brackets in the output, it means you're referencing a rule that doesn't exist.
+#   (like "Hello <thisRuleDoesNotExist>")
+# If a rule name is defined more than once, the last one wins.
+# Set your text editor to make-file or Python language mode for approximate syntax highlighting.

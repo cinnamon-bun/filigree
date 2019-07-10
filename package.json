@@ -1,0 +1,29 @@
+{
+  "name": "filigree",
+  "version": "0.0.1",
+  "description": "A text expansion toolkit",
+  "main": "./dist/filigree.js",
+  "bin": {
+    "filigree": "./dist/filigree-cli.js"
+  },
+  "scripts": {
+    "depgraph": "arkit --exclude dist,public -o depgraph.svg",
+    "clean": "rm -f dist/*",
+    "build": "npm run clean && nearleyc src/filigreeGrammar.ne -o src/filigreeGrammar.ts && nearley-railroad src/filigreeGrammar.ne -o railroad.html && tsc",
+    "test-filigree": "npm run build && node dist/test-filigree.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/moo": "^0.5.0",
+    "@types/nearley": "^2.11.0",
+    "@types/node": "^12.6.2",
+    "arkit": "^1.6.2",
+    "commander": "^2.20.0",
+    "moo": "^0.5.0",
+    "nearley": "^2.16.0",
+    "onchange": "^6.0.0",
+    "typescript": "^3.4.5"
+  }
+}

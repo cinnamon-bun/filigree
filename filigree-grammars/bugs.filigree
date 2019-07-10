@@ -1,0 +1,13 @@
+
+fruit = [blueberry/strawberry/peach/raspberry/apple/grape/banana/cherry/berry/pineapple]
+veg = [broccoli/chard/kale/cucumber/squash/pumpkin]
+spice = [cinnamon/clove/mint/sugar/honey/sap/nectar/chocolate]
+flower = [rose/chamomile/hibiscus/lavender/catkin]
+otherFlavor = [bark/twig/spore/petal/pollen/leaf/dewdrop/dirt/pebble/pinecone/mushroom]
+flavor = [<fruit>/<veg>/<spice>/<flower>/<otherFlavor>]
+
+smallNoun = [<fruit>/<veg>/<flower>/<otherFlavor>]
+bigNoun = [rock/garden/creek/flower/bush/bramble/mushroom/log/meadow/tree]
+noun = [<smallNoun>/<bigNoun>]
+
+size = [big/little/small/lil/tiny]
