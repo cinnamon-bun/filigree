@@ -21,7 +21,7 @@ let makeFilFromFileOrQuit = (fn : string) : Filigree => {
 program
     .version('0.0.1')
     .arguments('<fn> [rule]')
-    .option('-n, --num <n>', 'number to generate (if a rule is provided)', 5)
+    .option('-n, --num <n>', 'number to generate (if a rule is provided)', 1)
     .option('-s, --source', 'print source')
     .option('-r, --repr', 'print source in repr mode')
     .option('-j, --json', 'print raw rule JSON')

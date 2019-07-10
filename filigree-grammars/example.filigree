@@ -1,8 +1,10 @@
-# FILIGRE
 # A Filigree file is a list of text-expansion rules.
 
-# Define a rule
+# Define a rule.  The right side is like a string but without quote marks.
 job = candlestick maker
+
+# Quote marks have no special meaning; they're just part of your text
+reply = "That's nice," he replied.
 
 # Randomly choose one of several options with square brackets and "/"
 name = Captain [Moss/Pebble/Twig]
@@ -10,28 +12,28 @@ name = Captain [Moss/Pebble/Twig]
 # Reference another rule with angled brackets
 greeting = Hello to <name> who is a <job>.
 
-# Choices can contain more choices and references
-greeting2 = [Hi [there /]<name>/Hello], how are you today?
-
 # To make things occur rarely, use empty choices.
 # The more empty choices, the less often the other choices will appear.
-greeting3 = Hi [there /]<name>.     # "there " happens 1/2 of the time
-greeting4 = Hi [there ////]<name>.  # "there " happens 1/5 of the time
+greeting2 = Hi [there /]<name>.     # "there " happens 1/2 of the time
+greeting3 = Hi [there ////]<name>.  # "there " happens 1/5 of the time
+
+# Choices can contain nested choices and references
+greeting4 = [Hi [there /]<name>/Hello], how are you today?
 
 # Trailing whitespace on a line is removed.
 # To make whitespace matter, put it inside choice brackets.
-# You can also make a zero-length string using choice brackets.
+# You can also make a zero-length string this way.
 threespaces = [   ]
+wordAndSpace = [hello ]
 nothing = []
 
 # Rules can reference themselves but make sure it's possible for them to eventually stop!
 # This returns "yo yo yo yo!" with a random number of repeats.
 repeat = yo[ <repeat>/!]
 
-# Quote marks have no special meaning; they're just part of your text
-reply = "That's nice," he replied.
-
 a = b   # Comments start with "#" and can go on the same line as a rule.
+
+    c = d  # Indentation is allowed and has no meaning
 
 # Each rule declaration must be on its own line.  TODO: allow them to span lines
 # Blank lines are ignored.
@@ -42,4 +44,5 @@ a = b   # Comments start with "#" and can go on the same line as a rule.
 # If you see angle brackets in the output, it means you're referencing a rule that doesn't exist.
 #   (like "Hello <thisRuleDoesNotExist>")
 # If a rule name is defined more than once, the last one wins.
+# Besides that, rules can be declared in any order.
 # Set your text editor to make-file or Python language mode for approximate syntax highlighting.
