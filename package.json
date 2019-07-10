@@ -7,13 +7,13 @@
     "filigree": "./cli.js"
   },
   "types": "./dist/filigree.d.ts",
-  "prepublishOnly": "npm run build",
   "scripts": {
     "depgraph": "arkit --exclude dist,public -o depgraph.svg",
     "clean": "rm -f dist/*",
     "build": "npm run clean && nearleyc src/filigreeGrammar.ne -o src/filigreeGrammar.ts && nearley-railroad src/filigreeGrammar.ne -o railroad.html && tsc",
     "test-filigree": "npm run build && node dist/test-filigree.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
   },
   "author": "Cinnamon <cinnamon_npm@fastmail.com>",
   "repository": {
