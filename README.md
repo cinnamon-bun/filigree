@@ -139,6 +139,55 @@ console.log(fil.generate('greeting');
 
 Filigree is written in Typescript and comes with Typescript definitions.  It ought to work in the browser but this is not tested yet.
 
+## Advanced use: modifiers
+
+Modifiers are small functions that change the string produced by a rule, for example to make it uppercase.
+
+```python
+greeting = hello
+fruit = [apple/banana]
+sentence = <greeting.titlecase> world, have some <fruit.s>!
+
+# you can apply multiple modifiers in a row
+loudSentence = <sentence.trim.uppercase>!!!
+```
+
+Modifiers can only be used inside a `<rule>` reference.
+
+### Built in modifiers
+
+```typescript
+// grammar
+s  // bat -> bats, box -> boxes
+a  // box -> a box, apple -> an apple
+ed  // jump -> jumped, sit -> sat
+
+// case
+uppercase  // exAMPLE INput -> EXAMPLE INPUT
+lowercase  // exAMPLE INput -> example input
+titlecase  // exAMPLE INput -> Example Input
+
+// fun
+inception  // hello -> H E L L O
+wackycase  // hello world -> hElLo wOrLd
+
+// whitespace
+trim       // " hello " -> "hello"   (removes leading and trailing spaces)
+collapseWhitespace  // a    b -> a b  (combine consecutive spaces into a single space)
+```
+
+### Adding your own custom modifiers
+
+```typescript
+let fil = new Filigree(source);
+
+// Add your own functions to the fil.modifiers object
+// They should accept a string and return a string.
+fil.modifiers.loud = (input : string) => {
+    return input.toUpperCase() + '!!!!';
+}
+```
+
 ## Developing
 
 The parser is made using [Nearley](https://nearley.js.org/) and is specified in [filigreeGrammar.ne](src/filigreeGrammar.ne).

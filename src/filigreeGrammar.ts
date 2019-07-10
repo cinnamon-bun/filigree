@@ -5,18 +5,20 @@
 function id(d: any[]): any { return d[0]; }
 declare var nl: any;
 declare var ruleName: any;
+declare var dot: any;
 declare var or: any;
 declare var nonControlChars: any;
 
 let moo = require('moo');
 let lexer = moo.compile({
-    ruleName: /[a-zA-Z0-9_-]+/,
+    ruleName: /[a-zA-Z0-9_-]+/,  // this is also used for modifier names
     eq: " = ",
     lbrak: "[",
     rbrak: "]",
     lang: "<",
     rang: ">",
     or: "/",
+    dot: ".",
     // ignorable noise between lines:
     // optional whitespace
     // optional comment to the end of the line (starting with "#")
@@ -27,7 +29,7 @@ let lexer = moo.compile({
     nl: { match: /[ \t]*(?:#[^\n]*)?\n[ \t]*/, lineBreaks: true },
 
     // general string characters
-    nonControlChars: /[^[/\]<>=\n]/,  // not one of [ | ] < > = \n
+    nonControlChars: /[^[/\]<.>=\n]/,  // not one of [ | ] < . > = \n
 
     //nl: { match: /[ \t]*\n[ \t]*/, lineBreaks: true },  // 
     //comment: /[ \t]*\/\/[^\n]*/,  // In other words, ws* "//" anything-but-newline*
@@ -54,6 +56,7 @@ export type FSeq = {
 export type FRef = {
     kind: 'ref',
     name : string,
+    mods : string[],
 }
 
 export type FChoose = {
@@ -137,7 +140,26 @@ export var ParserRules: NearleyRule[] = [
         } },
     {"name": "tool", "symbols": ["ref"]},
     {"name": "tool", "symbols": ["choose"]},
-    {"name": "ref", "symbols": [{"literal":"<"}, (lexer.has("ruleName") ? {type: "ruleName"} : ruleName), {"literal":">"}], "postprocess": ([l, n, r]) : FRef => ({kind: 'ref', name: n.value})},
+    {"name": "ref$ebnf$1", "symbols": []},
+    {"name": "ref$ebnf$1$subexpression$1", "symbols": [(lexer.has("dot") ? {type: "dot"} : dot), (lexer.has("ruleName") ? {type: "ruleName"} : ruleName)]},
+    {"name": "ref$ebnf$1", "symbols": ["ref$ebnf$1", "ref$ebnf$1$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "ref", "symbols": [{"literal":"<"}, (lexer.has("ruleName") ? {type: "ruleName"} : ruleName), "ref$ebnf$1", {"literal":">"}], "postprocess":  (parts : any[]) : FRef => {
+            parts = flatten(parts);
+            parts = parts.slice(1, parts.length-1);  // remove < and >
+            let name = parts.shift().value;
+            let mods : string[] = [];
+            while (parts.length > 0) {
+                let mod = parts.shift();
+                if (mod.type !== 'dot') {
+                    mods.push(mod.value);
+                }
+            }
+            return {
+                kind: 'ref',
+                name: name,
+                mods: mods,
+            };
+        } },
     {"name": "choose$ebnf$1", "symbols": []},
     {"name": "choose$ebnf$1$subexpression$1", "symbols": [(lexer.has("or") ? {type: "or"} : or), "seq"]},
     {"name": "choose$ebnf$1", "symbols": ["choose$ebnf$1", "choose$ebnf$1$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]])},

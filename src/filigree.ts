@@ -1,4 +1,5 @@
 import nearley from 'nearley';
+import titlecase from 'titlecase';
 import {
     FChoose,
     FDecl,
@@ -35,9 +36,32 @@ let optimize = (expr : FExpr) : FExpr => {
     return expr;
 }
 
+let makeModifiers = () => ({
+    s: (input : string) => input + 's',    // TODO: make this smarter
+    a: (input : string) => 'a ' + input,   // TODO: make this smarter
+    ed: (input : string) => input + 'ed',  // TODO: make this smarter
+    uppercase: (input : string) => input.toUpperCase(),
+    lowercase: (input : string) => input.toLowerCase(),
+    inception: (input : string) => input.toUpperCase().split('').join(' '),  // "hello" -> "H E L L O"
+    titlecase: (input : string) => titlecase(input),
+    trim: (input : string) => input.trim(),
+    collapseWhitespace: (input : string) => input, // TODO: replace consecutive spaces with one space
+    wackycase: (input : string) => {
+        // "hello" -> "hElLo"
+        let result : string[] = [];
+        for (let ii = 0; ii < input.length; ii++) {
+            if (ii % 2 === 0) { result.push(input[ii].toLowerCase()); }
+            else { result.push(input[ii].toUpperCase()) }
+        }
+        return result.join('');
+    },
+    // TODO: sentencecase
+});
+
 export class Filigree {
     rules : {[name:string] : FExpr} = {};
     err : Error | null = null;
+    modifiers : {[name:string] : (input : string) => string} = makeModifiers();
     // Create a Filigree generator (a set of rules) from a Filigree-language source file.
     // source is a string of rules in Filigree format
     // If parsing fails, no error will be thrown, but this.err will become non-null
@@ -66,6 +90,35 @@ export class Filigree {
         }
         return this._evalFExpr(this.rules[name]);
     }
+    // Evaluate a Filigree expression object
+    _evalFExpr(expr : FExpr) : string {
+        let result : string = '????';
+        if (expr.kind == 'seq') {
+            result = expr.children.map(ch => this._evalFExpr(ch)).join('');
+        } else if (expr.kind === 'ref') {
+            let x = this.rules[expr.name];
+            if (x === undefined) {
+                return '<' + expr.name + '>';  // rule name not found
+            } else {
+                // TODO: test for stack overflow
+                // TODO: warn on bad modifier name
+                result = this._evalFExpr(x);
+                for (let modName of expr.mods) {
+                    let modFn = this.modifiers[modName] || ( (x : string) => x);
+                    result = modFn(result);
+                }
+            }
+        } else if (expr.kind == 'choose') {
+            // TODO: determinism
+            // TODO: move the most recent item to the end of the list of children
+            result = this._evalFExpr(choose(expr.children));
+        } else if (expr.kind === 'literal') {
+            result = expr.text;
+        }
+        // TODO: allow wrapping the result in tags
+        //return `<div class="expr">${result}</div>`;
+        return result;
+    }
     // Convert this set of Filigree rules back into Filigree language.
     toString() : string {
         return this._renderRules(this._toStringFExpr.bind(this));
@@ -87,7 +140,9 @@ export class Filigree {
         if (expr.kind == 'seq') {
             result = expr.children.map(ch => this._toStringFExpr(ch)).join('');
         } else if (expr.kind === 'ref') {
-            result = '<' + expr.name + '>';
+            let mods = expr.mods.join('.');
+            if (mods) { mods = '.' + mods; }
+            result = '<' + expr.name + mods + '>';
         } else if (expr.kind == 'choose') {
             result = '[' + expr.children.map(ch => this._toStringFExpr(ch)).join('/') + ']';
         } else if (expr.kind === 'literal') {
@@ -101,36 +156,14 @@ export class Filigree {
         if (expr.kind == 'seq') {
             result = '(' + expr.children.map(ch => this._reprFExpr(ch)).join('+') + ')';
         } else if (expr.kind === 'ref') {
-            result = '<' + expr.name + '>';
+            let mods = expr.mods.join('.');
+            if (mods) { mods = '.' + mods; }
+            result = '<' + expr.name + mods + '>';
         } else if (expr.kind == 'choose') {
             result = '[' + expr.children.map(ch => this._reprFExpr(ch)).join('/') + ']';
         } else if (expr.kind === 'literal') {
             result = '"' + expr.text + '"';
         }
-        return result;
-    }
-    // Evaluate a Filigree expression object
-    _evalFExpr(expr : FExpr) : string {
-        let result : string = '????';
-        if (expr.kind == 'seq') {
-            result = expr.children.map(ch => this._evalFExpr(ch)).join('');
-        } else if (expr.kind === 'ref') {
-            let x = this.rules[expr.name];
-            if (x === undefined) {
-                return '<' + expr.name + '>';  // name not found
-            } else {
-                // TODO: test for stack overflow
-                return this._evalFExpr(x);
-            }
-        } else if (expr.kind == 'choose') {
-            // TODO: determinism
-            // TODO: move the most recent item to the end of the list of children
-            result = this._evalFExpr(choose(expr.children));
-        } else if (expr.kind === 'literal') {
-            result = expr.text;
-        }
-        // TODO: allow wrapping the result in tags
-        //return `<div class="expr">${result}</div>`;
         return result;
     }
 }

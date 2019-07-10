@@ -1,13 +1,14 @@
 @{%
 let moo = require('moo');
 let lexer = moo.compile({
-    ruleName: /[a-zA-Z0-9_-]+/,
+    ruleName: /[a-zA-Z0-9_-]+/,  // this is also used for modifier names
     eq: " = ",
     lbrak: "[",
     rbrak: "]",
     lang: "<",
     rang: ">",
     or: "/",
+    dot: ".",
     // ignorable noise between lines:
     // optional whitespace
     // optional comment to the end of the line (starting with "#")
@@ -18,7 +19,7 @@ let lexer = moo.compile({
     nl: { match: /[ \t]*(?:#[^\n]*)?\n[ \t]*/, lineBreaks: true },
 
     // general string characters
-    nonControlChars: /[^[/\]<>=\n]/,  // not one of [ | ] < > = \n
+    nonControlChars: /[^[/\]<.>=\n]/,  // not one of [ | ] < . > = \n
 
     //nl: { match: /[ \t]*\n[ \t]*/, lineBreaks: true },  // 
     //comment: /[ \t]*\/\/[^\n]*/,  // In other words, ws* "//" anything-but-newline*
@@ -45,6 +46,7 @@ export type FSeq = {
 export type FRef = {
     kind: 'ref',
     name : string,
+    mods : string[],
 }
 
 export type FChoose = {
@@ -109,7 +111,23 @@ tool ->
   | choose
 
 # <foo>
-ref -> "<" %ruleName ">"  {% ([l, n, r]) : FRef => ({kind: 'ref', name: n.value}) %}
+ref -> "<" %ruleName (%dot %ruleName):* ">"  {% (parts : any[]) : FRef => {
+    parts = flatten(parts);
+    parts = parts.slice(1, parts.length-1);  // remove < and >
+    let name = parts.shift().value;
+    let mods : string[] = [];
+    while (parts.length > 0) {
+        let mod = parts.shift();
+        if (mod.type !== 'dot') {
+            mods.push(mod.value);
+        }
+    }
+    return {
+        kind: 'ref',
+        name: name,
+        mods: mods,
+    };
+} %}
 
 # [a|b]
 choose -> "[" seq (%or seq):* "]"  {% (parts: any[]) : FChoose => {

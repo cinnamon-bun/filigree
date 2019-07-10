@@ -55,12 +55,20 @@ let expectFail = (s : string) => {
 */
 
 //let source = "greet = hello there[ <greet>|!]";
+/*
 let source = `
     name = [sue/joe]  # comment
     greet =   hello <name>!  
     threespaces = [   ]
     empty1 = 
     empty2 = []
+`;
+*/
+let source = `
+    name = captain moss
+    greet = <name>, <name.uppercase>, <name.s.uppercase>, <name.inception>, <name.titlecase>, <name.wackycase>, <name.wackycase.inception>
+    withWhitespace = [   hello   ]
+    trimTest = -<withWhitespace>-   -<withWhitespace.trim>-
 `;
 let fil = new Filigree(source);
 if (fil.err) {
@@ -77,8 +85,9 @@ log('------------------------------');
 log(JSON.stringify(fil.rules, null, 4));
 log('------------------------------');
 log('--- generate ----');
-for (let ii = 0; ii < 5; ii++) {
+for (let ii = 0; ii < 1; ii++) {
     log(fil.generate('greet'));
+    log(fil.generate('trimTest'));
 }
 log('------------------------------');
 
