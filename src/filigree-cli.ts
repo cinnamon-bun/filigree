@@ -25,6 +25,7 @@ program
     .option('-s, --source', 'print source')
     .option('-r, --repr', 'print source in repr mode')
     .option('-j, --json', 'print raw rule JSON')
+    .option('-g, --graph', 'generate a graph of rules and their dependencies in mermaid format')
     .action((fn, rule, options) => {
         let fil = makeFilFromFileOrQuit(fn);
         if (!rule) {
@@ -34,8 +35,17 @@ program
                 log(fil.repr());
             } else if (options.json) {
                 log(JSON.stringify(fil.rules, null, 4));
+            } else if (options.graph) {
+                let graph : string[] = [];
+                graph.push('graph LR;');
+                for (let ruleName of fil.ruleNames()) {
+                    for (let refdRuleName of fil.refsInRule(ruleName)) {
+                        graph.push(`    ${ruleName}-->${refdRuleName};`);
+                    }
+                }
+                log(graph.join('\n'));
             } else {
-                log(Object.keys(fil.rules).join('\n'));
+                log(fil.ruleNames().join('\n'));
             }
         } else {
             if (options.source) {

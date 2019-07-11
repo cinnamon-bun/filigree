@@ -90,13 +90,14 @@ npm install --save filigree-text
 ## Command-line use
 
 ```
-filigree <filename> [-s|-r|-j]
+filigree <filename> [-s|-r|-j|-g]
 
     Print out debugging info about a filigree file.
     With no options, prints a list of the rules in the file.
     -s, --source   print source
     -r, --repr     print source in repr mode (for debugging)
     -j, --json     print raw rule JSON
+    -g, --graph    generate a graph of rules and their dependencies in mermaid format
 
 filigree <filename> <ruleName> [-n|-s|-r|-j]
 
@@ -112,8 +113,20 @@ filigree <filename> <ruleName> [-n|-s|-r|-j]
 Example:
 filigree tweets.filigree             # see a list of the rules in the file
 filigree tweets.filigree tweet -n 5  # generate text from the "tweet" rule 5 times
+```
+
+To see a graph of your rules and their dependencies, you'll need to install [mermaid.cli](https://github.com/mermaidjs/mermaid.cli).
 
 ```
+npm install --global mermaid.cli  # installs "mmdc" mermaid graph renderer
+
+filigree yourfile.filigree -g > graph.mmd
+mmdc -i graph.mmd -o graph.png
+```
+
+![](example-graph.png)
+
+The graph only shows rules, not individual pieces of rules.
 
 ## Usage in Javascript
 

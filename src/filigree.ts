@@ -13,6 +13,27 @@ import * as filigreeGrammar from './filigreeGrammar';
 let choose = <T>(items : T[]) : T =>
     items[Math.floor(Math.random() * items.length)];
 
+let dedupeStrings = (arr : string[]) : string[] => {
+    // given an array of strings, return a new array with duplicates removed
+    let obj : { [key:string] : boolean } = {};
+    for (let item of arr) {
+        obj[item] = true;
+    }
+    return Object.keys(obj);
+}
+
+let flatten = (arr : any[]) : any[] => {
+    let result : any[] = [];
+    for (let item of arr) {
+        if (Array.isArray(item)) {
+            result = result.concat(flatten(item));
+        } else {
+            result.push(item);
+        }
+    }
+    return result;
+}
+
 // Given a raw FExpr object, clean it up and remove redundant parts
 let optimize = (expr : FExpr) : FExpr => {
     // recurse to children
@@ -78,9 +99,25 @@ export class Filigree {
         } catch (e) {
             this.err = e;
         }
-        for (let name of Object.keys(this.rules)) {
+        for (let name of this.ruleNames()) {
             this.rules[name] = optimize(this.rules[name]);
         }
+    }
+    ruleNames() : string[] {
+        return Object.keys(this.rules);
+    }
+    refsInRule(ruleName : string) : string[] {
+        // return a list of the rules referenced by the given rule
+        let refsInExpr = (expr : FExpr) : string[] => {
+            if (expr.kind === 'ref') {
+                return [expr.name];
+            } else if (expr.kind === 'seq' || expr.kind === 'choose') {
+                return dedupeStrings(flatten(expr.children.map(refsInExpr)));
+            } else {
+                return [];
+            }
+        }
+        return refsInExpr(this.rules[ruleName]);
     }
     // Generate text from a rule.
     // name is a rule name
@@ -129,7 +166,7 @@ export class Filigree {
     }
     _renderRules(fn : (x : FExpr) => string) : string {
         let result : string[] = [];
-        for (let name of Object.keys(this.rules)) {
+        for (let name of this.ruleNames()) {
             result.push(name + ' = ' + fn(this.rules[name]));
         }
         return result.join('\n');
