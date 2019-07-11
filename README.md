@@ -1,6 +1,19 @@
+
 # Filigree
 
 A language for generating text using text expansion rules, similar to [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots!
+
+## Table of contents
+
+- [Simple input grammar](#simple-input-grammar)
+- [Detailed input grammar](#detailed-input-grammar)
+- [Install](#install)
+- [Command-line use](#command-line-use)
+- [Usage in Javascript](#usage-in-javascript)
+- [Advanced use: Rule modifiers](#advanced-use-rule-modifiers)
+  - [Built in modifiers](#built-in-modifiers)
+  - [Adding your own custom modifiers](#adding-your-own-custom-modifiers)
+- [Developing](#developing)
 
 ## Simple input grammar
 
@@ -10,7 +23,11 @@ A language for generating text using text expansion rules, similar to [Tracery](
 
 tweet = <username>: [What a nice day!/I am hungry for a <snack>]
 username = @<fruit>
-snack = [<fruit>/<fruit> pie/<fruit> pudding]
+snack = [
+    <fruit>
+    <fruit> pie
+    <fruit> pudding
+]
 fruit = [apple/banana/cherry]
 ```
 
@@ -61,6 +78,10 @@ fruits = [apple
 banana
 cherry
 <berries>]
+slogan = Have a [
+    snack
+    bite
+] today!
 
 # Trailing whitespace on a line is removed.
 # To make whitespace matter, put it inside choice brackets.

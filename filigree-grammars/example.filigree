@@ -25,14 +25,19 @@ greeting4 = [Hi [there /]<name>/Hello], how are you today?
 # Multi-line choices ignore blank lines, which means you can't use them to
 # make rare choices like [rare////].
 # Whitespace around each line is ignored.
-fruits = [
-    apple
-    banana
+berries = [
+    blueberry
+    strawberry
     cherry
 ]
-veg = [tomato
-onion
-garlic]
+fruits = [apple
+banana
+cherry
+<berries>]
+slogan = Have a [
+    snack
+    bite
+] today!
 
 # Trailing whitespace on a line is removed.
 # To make whitespace matter, put it inside choice brackets.
