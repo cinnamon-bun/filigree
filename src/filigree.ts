@@ -79,6 +79,8 @@ let makeModifiers = () => ({
     // TODO: sentencecase
 });
 
+export type WrapperFn = (rule : string, text : string) => string;
+
 export class Filigree {
     rules : {[name:string] : FExpr} = {};
     err : Error | null = null;
@@ -121,17 +123,21 @@ export class Filigree {
     }
     // Generate text from a rule.
     // name is a rule name
-    generate(name : string) : string {
+    generate(name : string, wrapperFn? : WrapperFn) : string {
         if (this.rules[name] === undefined) {
             return '<' + name + '>';  // name not found
         }
-        return this._evalFExpr(this.rules[name]);
+        let result = this._evalFExpr(this.rules[name], wrapperFn);
+        if (wrapperFn !== undefined) {
+            result = wrapperFn(name, result);
+        }
+        return result;
     }
     // Evaluate a Filigree expression object
-    _evalFExpr(expr : FExpr) : string {
+    _evalFExpr(expr : FExpr, wrapperFn? : WrapperFn) : string {
         let result : string = '????';
         if (expr.kind == 'seq') {
-            result = expr.children.map(ch => this._evalFExpr(ch)).join('');
+            result = expr.children.map(ch => this._evalFExpr(ch, wrapperFn)).join('');
         } else if (expr.kind === 'ref') {
             let x = this.rules[expr.name];
             if (x === undefined) {
@@ -139,16 +145,19 @@ export class Filigree {
             } else {
                 // TODO: test for stack overflow
                 // TODO: warn on bad modifier name
-                result = this._evalFExpr(x);
+                result = this._evalFExpr(x, wrapperFn);
                 for (let modName of expr.mods) {
                     let modFn = this.modifiers[modName] || ( (x : string) => x);
                     result = modFn(result);
+                }
+                if (wrapperFn !== undefined) {
+                    result = wrapperFn(expr.name, result);
                 }
             }
         } else if (expr.kind == 'choose') {
             // TODO: determinism
             // TODO: move the most recent item to the end of the list of children
-            result = this._evalFExpr(choose(expr.children));
+            result = this._evalFExpr(choose(expr.children), wrapperFn);
         } else if (expr.kind === 'literal') {
             result = expr.text;
         }

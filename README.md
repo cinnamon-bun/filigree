@@ -168,6 +168,8 @@ The graph only shows rules, not individual pieces of rules.
 
 ## Usage in Javascript
 
+Filigree is written in Typescript and comes with Typescript definitions.  It ought to work in the browser but this is not tested yet.
+
 ```typescript
 import Filigree from 'filigree-text';
 
@@ -186,9 +188,16 @@ if (fil.err) {
 
 // generate a string from the "greeting" rule
 console.log(fil.generate('greeting');
-```
 
-Filigree is written in Typescript and comes with Typescript definitions.  It ought to work in the browser but this is not tested yet.
+// you can also supply a "wrapper" function to add markup around the results
+// as the rules are put together.
+let wrapperFn = (rule : string, text : string) : string =>
+    `<div style="padding:10px; display:inline; border: 1px dotted red; border-radius:5px;">
+        <sup>${rule}</sup>
+        ${text}
+    </div>`;
+console.log(fil.generate('greeting', wrapperFn));
+```
 
 ## Advanced use: Rule modifiers
 

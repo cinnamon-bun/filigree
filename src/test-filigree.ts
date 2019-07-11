@@ -93,8 +93,12 @@ log('------------------------------');
 log(JSON.stringify(fil.rules, null, 4));
 log('------------------------------');
 log('--- generate ----');
+
+let wrapperFn = (rule : string, text : string) : string =>
+    `(${rule}:${text})`;
+
 for (let ii = 0; ii < 3; ii++) {
-    log(fil.generate('greeting'));
+    log(fil.generate('greeting', wrapperFn));
 }
 log('------------------------------');
 
