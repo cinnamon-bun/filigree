@@ -39,6 +39,7 @@ program
                 let graph : string[] = [];
                 graph.push('graph LR;');
                 for (let ruleName of fil.ruleNames()) {
+                    graph.push(`    ${ruleName};`);
                     for (let refdRuleName of fil.refsInRule(ruleName)) {
                         graph.push(`    ${ruleName}-->${refdRuleName};`);
                     }
