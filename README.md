@@ -47,6 +47,21 @@ greeting3 = Hi [there ////]<name>.  # "there " happens 1/5 of the time
 # Choices can contain nested choices and references
 greeting4 = [Hi [there /]<name>/Hello], how are you today?
 
+# Choices can be written across multiple lines instead of using "/" on a single line.
+# You can't mix these; choose either "/" or multi-line.
+# Multi-line choices ignore blank lines, which means you can't use them to
+# make rare choices like [rare////].
+# Whitespace around each line is ignored.
+berries = [
+    blueberry
+    strawberry
+    cherry
+]
+fruits = [apple
+banana
+cherry
+<berries>]
+
 # Trailing whitespace on a line is removed.
 # To make whitespace matter, put it inside choice brackets.
 # You can also make a zero-length string this way.
@@ -152,7 +167,7 @@ console.log(fil.generate('greeting');
 
 Filigree is written in Typescript and comes with Typescript definitions.  It ought to work in the browser but this is not tested yet.
 
-## Advanced use: modifiers
+## Advanced use: Rule modifiers
 
 Modifiers are small functions that change the string produced by a rule, for example to make it uppercase.
 

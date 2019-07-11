@@ -139,7 +139,8 @@ export var ParserRules: NearleyRule[] = [
             };
         } },
     {"name": "tool", "symbols": ["ref"]},
-    {"name": "tool", "symbols": ["choose"]},
+    {"name": "tool", "symbols": ["chooseMultiLine"]},
+    {"name": "tool", "symbols": ["chooseOneLine"]},
     {"name": "ref$ebnf$1", "symbols": []},
     {"name": "ref$ebnf$1$subexpression$1", "symbols": [(lexer.has("dot") ? {type: "dot"} : dot), (lexer.has("ruleName") ? {type: "ruleName"} : ruleName)]},
     {"name": "ref$ebnf$1", "symbols": ["ref$ebnf$1", "ref$ebnf$1$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]])},
@@ -160,10 +161,37 @@ export var ParserRules: NearleyRule[] = [
                 mods: mods,
             };
         } },
-    {"name": "choose$ebnf$1", "symbols": []},
-    {"name": "choose$ebnf$1$subexpression$1", "symbols": [(lexer.has("or") ? {type: "or"} : or), "seq"]},
-    {"name": "choose$ebnf$1", "symbols": ["choose$ebnf$1", "choose$ebnf$1$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]])},
-    {"name": "choose", "symbols": [{"literal":"["}, "seq", "choose$ebnf$1", {"literal":"]"}], "postprocess":  (parts: any[]) : FChoose => {
+    {"name": "chooseMultiLine$ebnf$1", "symbols": [(lexer.has("nl") ? {type: "nl"} : nl)], "postprocess": id},
+    {"name": "chooseMultiLine$ebnf$1", "symbols": [], "postprocess": () => null},
+    {"name": "chooseMultiLine$ebnf$2", "symbols": []},
+    {"name": "chooseMultiLine$ebnf$2$subexpression$1", "symbols": [(lexer.has("nl") ? {type: "nl"} : nl), "seq"]},
+    {"name": "chooseMultiLine$ebnf$2", "symbols": ["chooseMultiLine$ebnf$2", "chooseMultiLine$ebnf$2$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "chooseMultiLine$ebnf$3", "symbols": [(lexer.has("nl") ? {type: "nl"} : nl)], "postprocess": id},
+    {"name": "chooseMultiLine$ebnf$3", "symbols": [], "postprocess": () => null},
+    {"name": "chooseMultiLine", "symbols": [{"literal":"["}, "chooseMultiLine$ebnf$1", "seq", "chooseMultiLine$ebnf$2", "chooseMultiLine$ebnf$3", {"literal":"]"}], "postprocess":  (parts: any[]) : FChoose => {
+            let children = flatten(parts);
+            //console.log('----------------\\');
+            //console.log(JSON.stringify(children, null, 4));
+            children = children.filter(child =>
+                child !== null && child.type !== 'lbrak' && child.type !== 'nl' && child.type !== 'rbrak'
+            );
+            // remove empty lines
+            children = children.filter(child =>
+                !( child.kind === 'seq' && child.children.length === 0 )
+                //&& ! (child.kind === 'seq' && child.children.length === 1 && child.children[0]
+            );
+            //console.log('----------------');
+            //console.log(JSON.stringify(children, null, 4));
+            //console.log('----------------/');
+            return {
+                kind: 'choose',
+                children: children,
+            };
+        } },
+    {"name": "chooseOneLine$ebnf$1", "symbols": []},
+    {"name": "chooseOneLine$ebnf$1$subexpression$1", "symbols": [(lexer.has("or") ? {type: "or"} : or), "seq"]},
+    {"name": "chooseOneLine$ebnf$1", "symbols": ["chooseOneLine$ebnf$1", "chooseOneLine$ebnf$1$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "chooseOneLine", "symbols": [{"literal":"["}, "seq", "chooseOneLine$ebnf$1", {"literal":"]"}], "postprocess":  (parts: any[]) : FChoose => {
             let children = flatten(parts);
             children = children.filter(child =>
                 child.type !== 'lbrak' && child.type !== 'or' && child.type !== 'rbrak'
@@ -171,7 +199,7 @@ export var ParserRules: NearleyRule[] = [
             return {
                 kind: 'choose',
                 children: children,
-            } as any;
+            };
         } },
     {"name": "literal$ebnf$1$subexpression$1", "symbols": [(lexer.has("ruleName") ? {type: "ruleName"} : ruleName)]},
     {"name": "literal$ebnf$1$subexpression$1", "symbols": [(lexer.has("dot") ? {type: "dot"} : dot)]},

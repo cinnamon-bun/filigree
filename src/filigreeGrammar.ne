@@ -108,7 +108,8 @@ seq -> literal:? (tool literal:?):*  {% ([firstLiteral, pairs]) : FSeq => {
 
 tool ->
     ref
-  | choose
+  | chooseMultiLine
+  | chooseOneLine
 
 # <foo>
 ref -> "<" %ruleName (%dot %ruleName):* ">"  {% (parts : any[]) : FRef => {
@@ -129,8 +130,30 @@ ref -> "<" %ruleName (%dot %ruleName):* ">"  {% (parts : any[]) : FRef => {
     };
 } %}
 
+# [a\nb]
+chooseMultiLine => "[" %nl:? seq (%nl seq):* %nl:? "]"  {% (parts: any[]) : FChoose => {
+    let children = flatten(parts);
+    //console.log('----------------\\');
+    //console.log(JSON.stringify(children, null, 4));
+    children = children.filter(child =>
+        child !== null && child.type !== 'lbrak' && child.type !== 'nl' && child.type !== 'rbrak'
+    );
+    // remove empty lines
+    children = children.filter(child =>
+        !( child.kind === 'seq' && child.children.length === 0 )
+        //&& ! (child.kind === 'seq' && child.children.length === 1 && child.children[0]
+    );
+    //console.log('----------------');
+    //console.log(JSON.stringify(children, null, 4));
+    //console.log('----------------/');
+    return {
+        kind: 'choose',
+        children: children,
+    };
+} %}
+
 # [a|b]
-choose -> "[" seq (%or seq):* "]"  {% (parts: any[]) : FChoose => {
+chooseOneLine -> "[" seq (%or seq):* "]"  {% (parts: any[]) : FChoose => {
     let children = flatten(parts);
     children = children.filter(child =>
         child.type !== 'lbrak' && child.type !== 'or' && child.type !== 'rbrak'
@@ -138,7 +161,7 @@ choose -> "[" seq (%or seq):* "]"  {% (parts: any[]) : FChoose => {
     return {
         kind: 'choose',
         children: children,
-    } as any;
+    };
 } %}
 
 # any other text

@@ -1,6 +1,6 @@
 import moo from 'moo';
 let lexer = moo.compile({
-    ruleName: /[a-zA-Z0-9_]+/,
+    ruleName: /[a-zA-Z0-9_-]+/,  // this is also used for modifier names
     eq: " = ",
     lbrak: "[",
     rbrak: "]",
@@ -18,7 +18,7 @@ let lexer = moo.compile({
     nl: { match: /[ \t]*(?:#[^\n]*)?\n[ \t]*/, lineBreaks: true },
 
     // general string characters
-    nonControlChars: /[^[/\]<.>=\n]/,  // not one of [ / ] < > = \n
+    nonControlChars: /[^[/\]<.>=\n]/,  // not one of [ | ] < . > = \n
 
     //nl: { match: /[ \t]*\n[ \t]*/, lineBreaks: true },  // 
     //comment: /[ \t]*\/\/[^\n]*/,  // In other words, ws* "//" anything-but-newline*
@@ -27,8 +27,10 @@ let lexer = moo.compile({
 
 
 let source = `
-    name = [joe/sue]
-    greeting = Hello <name.titlecase>.
+    name = [
+        a
+        b
+    ]
 `;
 lexer.reset(source);
 console.log('---------------------');

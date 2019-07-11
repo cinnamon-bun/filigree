@@ -65,8 +65,18 @@ let source = `
 `;
 */
 let source = `
-    name = [joe/sue]
-    greeting = Hello <name.titlecase>.
+    red = reddish
+    color = [
+        <red>?
+        green
+
+        blue
+    ]
+    a = [b]
+    c = [d
+        e]
+    size = [big/small///]
+    greeting = <color> <size>
 `;
 let fil = new Filigree(source);
 if (fil.err) {
