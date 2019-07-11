@@ -1,6 +1,6 @@
 {
   "name": "filigree-text",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A text expansion toolkit",
   "main": "./dist/filigree.js",
   "bin": {
