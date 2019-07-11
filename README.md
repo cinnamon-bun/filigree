@@ -3,6 +3,8 @@
 
 A language for generating text using text expansion rules, similar to [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots!
 
+Try the [demo website here!](https://cinnamon-bun.github.io/filigree-website/)
+
 ## Table of contents
 
 - [Simple input grammar](#simple-input-grammar)
