@@ -65,10 +65,8 @@ let source = `
 `;
 */
 let source = `
-    name = captain moss
-    greet = <name>, <name.uppercase>, <name.s.uppercase>, <name.inception>, <name.titlecase>, <name.wackycase>, <name.wackycase.inception>
-    withWhitespace = [   hello   ]
-    trimTest = -<withWhitespace>-   -<withWhitespace.trim>-
+    name = [joe/sue]
+    greeting = Hello <name.titlecase>.
 `;
 let fil = new Filigree(source);
 if (fil.err) {
@@ -85,9 +83,8 @@ log('------------------------------');
 log(JSON.stringify(fil.rules, null, 4));
 log('------------------------------');
 log('--- generate ----');
-for (let ii = 0; ii < 1; ii++) {
-    log(fil.generate('greet'));
-    log(fil.generate('trimTest'));
+for (let ii = 0; ii < 3; ii++) {
+    log(fil.generate('greeting'));
 }
 log('------------------------------');
 

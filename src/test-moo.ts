@@ -7,6 +7,7 @@ let lexer = moo.compile({
     lang: "<",
     rang: ">",
     or: "/",
+    dot: ".",
     // ignorable noise between lines:
     // optional whitespace
     // optional comment to the end of the line (starting with "#")
@@ -17,7 +18,7 @@ let lexer = moo.compile({
     nl: { match: /[ \t]*(?:#[^\n]*)?\n[ \t]*/, lineBreaks: true },
 
     // general string characters
-    nonControlChars: /[^[/\]<>=\n]/,  // not one of [ / ] < > = \n
+    nonControlChars: /[^[/\]<.>=\n]/,  // not one of [ / ] < > = \n
 
     //nl: { match: /[ \t]*\n[ \t]*/, lineBreaks: true },  // 
     //comment: /[ \t]*\/\/[^\n]*/,  // In other words, ws* "//" anything-but-newline*
@@ -26,7 +27,8 @@ let lexer = moo.compile({
 
 
 let source = `
-foo = [a/b] // comment
+    name = [joe/sue]
+    greeting = Hello <name.titlecase>.
 `;
 lexer.reset(source);
 console.log('---------------------');

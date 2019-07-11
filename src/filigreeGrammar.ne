@@ -142,42 +142,7 @@ choose -> "[" seq (%or seq):* "]"  {% (parts: any[]) : FChoose => {
 } %}
 
 # any other text
-literal -> (%ruleName | %nonControlChars):+  {% (pieces) : FLiteral => {
+literal -> (%ruleName | %dot | %nonControlChars):+  {% (pieces) : FLiteral => {
     let text = pieces[0].map((p : any) => p[0].value).join('');
     return {kind: 'literal', text: text};
 }%}
-
-
-
-
-
-
-
-
-
-
-###  ruleDecl -> %ruleName " = " expr
-###  # ruleName -> [a-zA-Z0-9_]:+
-###  
-###  expr -> 
-###      choose
-###    | ref
-###    | string
-###  
-###  ref -> "<" %ruleName ">"
-###  
-###  choose -> "[" string ("|" string):* "]"
-###  
-###  
-###  string -> strchar:+
-###  strchar -> [^[|\]<>=]  # not one of [ | ] < > " " =
-###  #strchar -> [a-zA-Z _"']
-
-# csscolor -> "#" hexdigit hexdigit hexdigit hexdigit hexdigit hexdigit
-#           | "#" hexdigit hexdigit hexdigit
-#           | "rgb"  _ "(" _ colnum _ "," _ colnum _ "," _ colnum _ ")"
-#           | "hsl"  _ "(" _ colnum _ "," _ colnum _ "," _ colnum _ ")"
-#           | "rgba" _ "(" _ colnum _ "," _ colnum _ "," _ colnum _ "," _ decimal _ ")"
-#           | "hsla" _ "(" _ colnum _ "," _ colnum _ "," _ colnum _ "," _ decimal _ ")"
-# hexdigit -> [a-fA-F0-9]
-# colnum   -> int | percentage

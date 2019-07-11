@@ -174,9 +174,11 @@ export var ParserRules: NearleyRule[] = [
             } as any;
         } },
     {"name": "literal$ebnf$1$subexpression$1", "symbols": [(lexer.has("ruleName") ? {type: "ruleName"} : ruleName)]},
+    {"name": "literal$ebnf$1$subexpression$1", "symbols": [(lexer.has("dot") ? {type: "dot"} : dot)]},
     {"name": "literal$ebnf$1$subexpression$1", "symbols": [(lexer.has("nonControlChars") ? {type: "nonControlChars"} : nonControlChars)]},
     {"name": "literal$ebnf$1", "symbols": ["literal$ebnf$1$subexpression$1"]},
     {"name": "literal$ebnf$1$subexpression$2", "symbols": [(lexer.has("ruleName") ? {type: "ruleName"} : ruleName)]},
+    {"name": "literal$ebnf$1$subexpression$2", "symbols": [(lexer.has("dot") ? {type: "dot"} : dot)]},
     {"name": "literal$ebnf$1$subexpression$2", "symbols": [(lexer.has("nonControlChars") ? {type: "nonControlChars"} : nonControlChars)]},
     {"name": "literal$ebnf$1", "symbols": ["literal$ebnf$1", "literal$ebnf$1$subexpression$2"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "literal", "symbols": ["literal$ebnf$1"], "postprocess":  (pieces) : FLiteral => {
