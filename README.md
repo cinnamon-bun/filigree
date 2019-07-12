@@ -66,24 +66,31 @@ greeting3 = Hi [there ////]<name>.  # "there " happens 1/5 of the time
 # Choices can contain nested choices and references
 greeting4 = [Hi [there /]<name>/Hello], how are you today?
 
-# Choices can be written across multiple lines instead of using "/" on a single line.
+# Or, choices can be written across multiple lines instead of using "/" on a single line.
 # You can't mix these; choose either "/" or multi-line.
 # Multi-line choices ignore blank lines, which means you can't use them to
 # make rare choices like [rare////].
-# Whitespace around each line is ignored.
+# Indentation and whitespace around each line is ignored.
 berries = [
     blueberry
     strawberry
     cherry
 ]
-fruits = [apple
+fruits = [
+apple
 banana
 cherry
-<berries>]
+<berries>
+]
 slogan = Have a [
     snack
     bite
-] today!
+] today!   # multi-line choice inside a longer phrase
+
+# This is not allowed -- the brackets have to be on their own lines:
+#   foo = [bar
+#      baz
+#      quuz]
 
 # Trailing whitespace on a line is removed.
 # To make whitespace matter, put it inside choice brackets.

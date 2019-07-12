@@ -1,0 +1,9 @@
+adjective = [exquisite/liberated/premeditated/rugged/nuanced/immaculate/unutterable/simpering/wooden/infuriating/stiff/syllabic/unchanging/pedantic/redundant/elephantine/crude/fleshy/laconic/low/roughshod/watery/larval/muscular/lurid/turgid/surprising/mysterious/gross]
+noun = [syntax/banality/commonplaces/drabness/feebleness/solemnity/emptiness/wrechedness/verbosity/epithets/vocabulary/metaphors/graces/jests/harangues/style/enthusiasm/aridity/conciseness/insinuations/humor]
+verbingWith = [vibrating with/beating against/impacted by/boasting of]
+verbed = [disgusted/enthralled/bored/pleased]
+verbsObj = [redeems/please/enthralls/bores/disgusts/beguiles/admonishes]
+phrasestart = [<adjective.titlecase> <noun>,/<verbingWith.titlecase> <noun>,/Borrowed from the <adjective> <noun> of <noun>,/Its <adjective> <noun>, so <adjective> yet so <adjective>,]
+phraseend = [<verbingWith> <noun>./it is neither <adjective> nor <adjective>./it <verbsObj> only the most <adjective>.]
+phrasecomplete = [It left me <verbed>./There is no limit to its <adjective> <noun>./Nevertheless, its <noun> <verbed> me./It <verbsObj> the reader with its <noun>./In neglecting <noun>, it produces <noun>./The inclusion of <noun>, <verbingWith> <noun>, <verbed> me.]
+start = Des Esseintes has reviewed your book: "<phrasestart><phraseend> <phrasecomplete> <phrasecomplete>"

@@ -131,7 +131,7 @@ ref -> "<" %ruleName (%dot %ruleName):* ">"  {% (parts : any[]) : FRef => {
 } %}
 
 # [a\nb]
-chooseMultiLine => "[" %nl:? seq (%nl seq):* %nl:? "]"  {% (parts: any[]) : FChoose => {
+chooseMultiLine => "[" %nl seq (%nl seq):* %nl "]"  {% (parts: any[]) : FChoose => {
     let children = flatten(parts);
     //console.log('----------------\\');
     //console.log(JSON.stringify(children, null, 4));

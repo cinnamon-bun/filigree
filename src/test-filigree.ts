@@ -65,18 +65,13 @@ let source = `
 `;
 */
 let source = `
-    red = reddish
-    color = [
-        <red>?
-        green
-
-        blue
+    oneLineChoice = [a/b/c]
+    multiLineChoice = [
+        x
+        y
+        z
     ]
-    a = [b]
-    c = [d
-        e]
-    size = [big/small///]
-    greeting = <color> <size>
+    start = <oneLineChoice> <multiLineChoice>
 `;
 let fil = new Filigree(source);
 if (fil.err) {
@@ -98,7 +93,7 @@ let wrapperFn = (rule : string, text : string) : string =>
     `(${rule}:${text})`;
 
 for (let ii = 0; ii < 3; ii++) {
-    log(fil.generate('greeting', wrapperFn));
+    log(fil.generate('start'));
 }
 log('------------------------------');
 
