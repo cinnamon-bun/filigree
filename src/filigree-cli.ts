@@ -22,6 +22,7 @@ program
     .version('0.0.1')
     .arguments('<fn> [rule]')
     .option('-n, --num <n>', 'number to generate (if a rule is provided)', 1)
+    .option('--seed <s>', 'random seed for deterministic output')
     .option('-s, --source', 'print source')
     .option('-r, --repr', 'print source in repr mode')
     .option('-j, --json', 'print raw rule JSON')
@@ -56,6 +57,9 @@ program
             } else if (options.json) {
                 log(JSON.stringify(fil.rules[rule], null, 4));
             } else {
+                if (options.seed !== undefined) {
+                    fil.seed(options.seed);
+                }
                 for (let ii = 0; ii < +options.num; ii++) {
                     log(fil.generate(rule));
                 }

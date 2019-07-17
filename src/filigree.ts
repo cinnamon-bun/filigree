@@ -1,5 +1,7 @@
 import nearley from 'nearley';
 import titlecase from 'titlecase';
+import seedrandom from 'seedrandom';
+type Rng = any;  // from seedrandom package
 import {
     FChoose,
     FDecl,
@@ -10,8 +12,54 @@ import {
 } from './filigreeGrammar';
 import * as filigreeGrammar from './filigreeGrammar';
 
+//--------------------------------------------------------------------------------
+// HELPERS
+
+// return an array [0, 1, ..., n-1]
+let range = (n : number) : number[] =>
+    [...Array(n).keys()]
+
 let choose = <T>(items : T[]) : T =>
     items[Math.floor(Math.random() * items.length)];
+
+let detChoose = <T>(items : T[], rng : Rng) : T =>
+    items[Math.floor(rng() * items.length)];
+
+// inclusive integer range
+let rngRange = (rng : Rng, min : number, max : number) : number => {
+    let max1 = max + 1;
+    return Math.floor(rng() * (max1-min) + min);
+}
+
+// choose a random item from the front 60% of the array, move it to the back, then return the item
+let detChooseAndMoveToBack = <T>(items : T[], rng : Rng) : T => {
+    let ii : number;
+    if (items.length <= 1) {
+        return items[0];
+    } else if (items.length === 2) {
+        ii = Math.floor(rng() * 1.2); // usually the first one, but not always
+    } else {
+        // choose from the first 60% of the array, rounded up
+        let countToConsider = Math.max(1, Math.ceil((items.length-1) * 0.6));
+        ii = rngRange(rng, 0, countToConsider-1);
+    }
+    let item = items[ii];
+    items.splice(ii, 1);
+    items.push(item);
+    return item;
+}
+
+// shuffle in place
+let detShuffleArray = <T>(items : T[], idFn : (t : T) => number, rng : Rng) : void => {
+    // TODO: sort by deterministic key of item which includes all its children
+    items.sort((a : T, b : T) => idFn(a) - idFn(b));
+    for (let ii = 0; ii < items.length-1; ii++) {
+        let kk = rngRange(rng, ii, items.length-1);
+        let temp : T = items[ii];
+        items[ii] = items[kk];
+        items[kk] = temp;
+    }
+}
 
 let dedupeStrings = (arr : string[]) : string[] => {
     // given an array of strings, return a new array with duplicates removed
@@ -34,11 +82,13 @@ let flatten = (arr : any[]) : any[] => {
     return result;
 }
 
+//--------------------------------------------------------------------------------
+
 // Given a raw FExpr object, clean it up and remove redundant parts
-let optimize = (expr : FExpr) : FExpr => {
+let optimizeExprs = (expr : FExpr) : FExpr => {
     // recurse to children
     if (expr.kind === 'seq' || expr.kind === 'choose') {
-        expr.children = expr.children.map(optimize);
+        expr.children = expr.children.map(optimizeExprs);
     }
 
     // TODO: if seq has empty literals, remove them
@@ -55,6 +105,26 @@ let optimize = (expr : FExpr) : FExpr => {
         } as FLiteral;
     }
     return expr;
+}
+
+// recursively assign unique ids to the exprs in sequence
+let assignIds = (expr : FExpr, idBox : number[]) : void => {
+    expr.id = idBox[0];
+    idBox[0] += 1;
+    if (expr.kind === 'seq' || expr.kind === 'choose') {
+        expr.children.forEach(ch => assignIds(ch, idBox));
+    }
+}
+
+// Randomly shuffle the children of all the choice exprs, recursively
+let shuffleChoices = (expr : FExpr, rng : Rng) : void => {
+    if (expr.kind === 'choose') {
+        let sortFn = (x : FExpr) : number => x.id;
+        detShuffleArray(expr.children, sortFn, rng);
+    }
+    if (expr.kind === 'seq' || expr.kind === 'choose') {
+        expr.children.forEach(ch => shuffleChoices(ch, rng));
+    }
 }
 
 let makeModifiers = () => ({
@@ -79,17 +149,24 @@ let makeModifiers = () => ({
     // TODO: sentencecase
 });
 
+// TODO: we need two kinds of functions, rawTextTransform and ruleWrapper
+// rawTextTransform should only apply to the lowest level literal strings
+//   it's meant for transforming html entities and linebreaks
+// ruleWrapper goes around each named rule
+//   it's meant to surround rules with recursive html markup for display
+// still unknown: how to handle "\" + "n" so it doesn't get capitalized by modifiers
 export type WrapperFn = (rule : string, text : string) => string;
 
 export class Filigree {
     rules : {[name:string] : FExpr} = {};
     err : Error | null = null;
     modifiers : {[name:string] : (input : string) => string} = makeModifiers();
+    rng : Rng;
     // Create a Filigree generator (a set of rules) from a Filigree-language source file.
     // source is a string of rules in Filigree format
     // If parsing fails, no error will be thrown, but this.err will become non-null
     // (and will contain an error message about what's wrong with the Filigree-language input).
-    constructor(source : string) {
+    constructor(source : string, seed? : string) {
         let parser = new nearley.Parser(nearley.Grammar.fromCompiled(filigreeGrammar));
         try {
             // add '\n' to ensure a comment on the last line lexes correctly
@@ -101,8 +178,19 @@ export class Filigree {
         } catch (e) {
             this.err = e;
         }
+        let idBox = [0];
         for (let name of this.ruleNames()) {
-            this.rules[name] = optimize(this.rules[name]);
+            this.rules[name] = optimizeExprs(this.rules[name]);
+            assignIds(this.rules[name], idBox);
+        }
+
+        this.seed(seed);
+    }
+    seed(seed? : string) : void {
+        // omit seed to get a different random one each time
+        this.rng = seedrandom(seed);
+        for (let name of this.ruleNames()) {
+            shuffleChoices(this.rules[name], this.rng);
         }
     }
     ruleNames() : string[] {
@@ -155,14 +243,10 @@ export class Filigree {
                 }
             }
         } else if (expr.kind == 'choose') {
-            // TODO: determinism
-            // TODO: move the most recent item to the end of the list of children
-            result = this._evalFExpr(choose(expr.children), wrapperFn);
+            result = this._evalFExpr(detChooseAndMoveToBack(expr.children, this.rng), wrapperFn);
         } else if (expr.kind === 'literal') {
             result = expr.text;
         }
-        // TODO: allow wrapping the result in tags
-        //return `<div class="expr">${result}</div>`;
         return result;
     }
     // Convert this set of Filigree rules back into Filigree language.

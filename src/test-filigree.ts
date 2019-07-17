@@ -1,6 +1,7 @@
 import {
     Filigree
 } from './filigree';
+import { FChoose } from './filigreeGrammar';
 
 let log = console.log;
 
@@ -65,11 +66,10 @@ let source = `
 `;
 */
 let source = `
-    oneLineChoice = [a/b/c]
+    oneLineChoice = [a/bbbb]
     multiLineChoice = [
-        x
-        y
-        z
+        xxxxx
+        yyyyyyyyyy
     ]
     start = <oneLineChoice> <multiLineChoice>
 `;
@@ -80,19 +80,34 @@ if (fil.err) {
     log('⚠️');
 }
 
-log('------------------------------');
-log('--- source ---\n' + source)
-log('--- toString ---\n' + fil.toString());
-log('--- repr ---\n' + fil.repr());
-log('------------------------------');
-log(JSON.stringify(fil.rules, null, 4));
-log('------------------------------');
-log('--- generate ----');
+//log('------------------------------');
+//log('--- source ---\n' + source)
+//log('--- toString ---\n' + fil.toString());
+//log('--- repr ---\n' + fil.repr());
+//log('------------------------------');
+//log(JSON.stringify(fil.rules, null, 4));
+//log('------------------------------');
+//log('--- generate ----');
 
 let wrapperFn = (rule : string, text : string) : string =>
     `(${rule}:${text})`;
 
+//console.log((fil.rules['oneLineChoice'] as FChoose).children.map((ch : any) => ch.text).join(' '));
 for (let ii = 0; ii < 3; ii++) {
+    let seed = '' + ii;
+    log('------------ ' + seed);
+    fil.seed(seed);
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
+    log(fil.generate('start'));
     log(fil.generate('start'));
 }
 log('------------------------------');

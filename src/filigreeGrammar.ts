@@ -37,7 +37,8 @@ let lexer = moo.compile({
 });
 
 export type FDecl = {
-    kind: 'decl',
+    id : number,
+    kind : 'decl',
     name : string,
     value : FExpr,
 }
@@ -49,23 +50,27 @@ export type FExpr =
   | FLiteral
 
 export type FSeq = {
-    kind: 'seq',
+    id : number,
+    kind : 'seq',
     children: FExpr[],
 }
 
 export type FRef = {
-    kind: 'ref',
+    id : number,
+    kind : 'ref',
     name : string,
     mods : string[],
 }
 
 export type FChoose = {
-    kind: 'choose',
+    id : number,
+    kind : 'choose',
     children : FExpr[],
 }
 
 export type FLiteral = {
-    kind: 'literal',
+    id : number,
+    kind : 'literal',
     text : string,
 }
 
@@ -114,6 +119,7 @@ export var ParserRules: NearleyRule[] = [
             return flatten(pairs).filter((x : any) => x.type !== 'nl');
         } },
     {"name": "ruleDecl", "symbols": [(lexer.has("ruleName") ? {type: "ruleName"} : ruleName), {"literal":" = "}, "seq"], "postprocess":  ([ruleName, _, seq]) : FDecl => ({
+            id: -1,
             kind: 'decl',
             name: ruleName.value,
             value: seq,
@@ -134,6 +140,7 @@ export var ParserRules: NearleyRule[] = [
                 sequence.push(pair[1]);
             }
             return {
+                id: -1,
                 kind: 'seq',
                 children: sequence.filter(x => x !== null),
             };
@@ -156,6 +163,7 @@ export var ParserRules: NearleyRule[] = [
                 }
             }
             return {
+                id: -1,
                 kind: 'ref',
                 name: name,
                 mods: mods,
@@ -180,6 +188,7 @@ export var ParserRules: NearleyRule[] = [
             //console.log(JSON.stringify(children, null, 4));
             //console.log('----------------/');
             return {
+                id: -1,
                 kind: 'choose',
                 children: children,
             };
@@ -193,6 +202,7 @@ export var ParserRules: NearleyRule[] = [
                 child.type !== 'lbrak' && child.type !== 'or' && child.type !== 'rbrak'
             );
             return {
+                id: -1,
                 kind: 'choose',
                 children: children,
             };
@@ -207,7 +217,11 @@ export var ParserRules: NearleyRule[] = [
     {"name": "literal$ebnf$1", "symbols": ["literal$ebnf$1", "literal$ebnf$1$subexpression$2"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "literal", "symbols": ["literal$ebnf$1"], "postprocess":  (pieces) : FLiteral => {
             let text = pieces[0].map((p : any) => p[0].value).join('');
-            return {kind: 'literal', text: text};
+            return {
+                id: -1,
+                kind: 'literal',
+                text: text
+            };
         }}
 ];
 
