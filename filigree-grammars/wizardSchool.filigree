@@ -2,8 +2,9 @@ adjective = [haunted/spooky/mysterious/dark/old]
 institute = [institute/school/college]
 subject = [wizardry/magic/spells/potions]
 schoolName = [
-    [The/] <adjective> <institute> of <subject>
-    [The/] <institute> of <adjective> <subject>
-    The <adjective> <subject> <institute>
+    <adjective> <institute> of <subject>
+    <institute> of <adjective> <subject>
+    <adjective> <subject> <institute>
+    <adjective> <adjective> <adjective> <institute>
 ]
 start = Welcome to the <schoolName.titlecase>
