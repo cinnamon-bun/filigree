@@ -3,7 +3,7 @@
 
 A language for generating text using text expansion rules, similar to [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots!
 
-Try the [demo website here!](https://cinnamon-bun.github.io/filigree-website/)
+Try it on the [online playground site](https://cinnamon-bun.github.io/filigree-website/), or clone the [example project on Glitch](https://glitch.com/~filigree-playground).
 
 ## Table of contents
 
