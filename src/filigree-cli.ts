@@ -6,9 +6,9 @@ import {
 
 let log = console.log;
 
-let makeFilFromFileOrQuit = (fn : string) : Filigree => {
+let makeFilFromFileOrQuit = (fn : string, seed : string | undefined) : Filigree => {
     let source = fs.readFileSync(fn, 'utf8');
-    let fil = new Filigree(source);
+    let fil = new Filigree(source, seed);
     if (fil.err) {
         log('⚠️');
         console.error(fil.err.message);
@@ -28,7 +28,7 @@ program
     .option('-j, --json', 'print raw rule JSON')
     .option('-g, --graph', 'generate a graph of rules and their dependencies in mermaid format')
     .action((fn, rule, options) => {
-        let fil = makeFilFromFileOrQuit(fn);
+        let fil = makeFilFromFileOrQuit(fn, options.seed);
         if (!rule) {
             if (options.source) {
                 log(fil.toString());
@@ -57,9 +57,6 @@ program
             } else if (options.json) {
                 log(JSON.stringify(fil.rules[rule], null, 4));
             } else {
-                if (options.seed !== undefined) {
-                    fil.seed(options.seed);
-                }
                 for (let ii = 0; ii < +options.num; ii++) {
                     log(fil.generate(rule));
                 }

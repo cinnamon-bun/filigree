@@ -15,6 +15,7 @@ Try the [demo website here!](https://cinnamon-bun.github.io/filigree-website/)
 - [Advanced use: Rule modifiers](#advanced-use-rule-modifiers)
   - [Built in modifiers](#built-in-modifiers)
   - [Adding your own custom modifiers](#adding-your-own-custom-modifiers)
+- [Determinism](#determinism)
 - [Developing](#developing)
 
 ## Simple input grammar
@@ -148,6 +149,7 @@ filigree <filename> <ruleName> [-n|-s|-r|-j]
 
     Generate text from a rule in a filigree file.
     -n, --num      number of strings to generate.  (default: 1)
+    --seed <s>     random seed for deterministic output
 
     If these options are provided, the specific rule is printed in detail
     instead of generating text.
@@ -186,7 +188,8 @@ let source = `
 `;
 
 // parse your filigree source
-let fil = new Filigree(source);
+let seed = 'abc';
+let fil = new Filigree(source, seed);  // seed is optional, omit it for different results every time
 if (fil.err) {
     // if the source is has syntax errors, they will be shown here
     console.error(fil.error.message);
@@ -204,6 +207,10 @@ let wrapperFn = (rule : string, text : string) : string =>
         ${text}
     </div>`;
 console.log(fil.generate('greeting', wrapperFn));
+
+// you can reset the random seed to get the same result as before
+fil.seed('abc');
+console.log(fil.generate('greeting');
 ```
 
 ## Advanced use: Rule modifiers
@@ -254,6 +261,40 @@ fil.modifiers.loud = (input : string) => {
     return input.toUpperCase() + '!!!!';
 }
 ```
+
+## Determinism
+
+If there are any choices in you grammar (square brackets), there is an element of randomness.  Normally you will get different random outputs each time you call `generate`.
+
+You can provide a random seed which will result in the same sequence of randomness every time.
+
+If you omit the seed, you will get completely different results each time.
+
+```typescript
+
+// you can provide a seed when creating a Filigree, but in this case we don't.
+let fil = new Filigree('start = [a/b/c/d]');
+// different results every time you run this file
+fil.generate('start');  // a
+fil.generate('start');  // c
+fil.generate('start');  // a
+
+// set a seed to begin a repeatable sequence of randomness
+fil.seed('whatever');
+fil.generate('start');  // d
+fil.generate('start');  // b
+fil.generate('start');  // a
+
+// set the seed again to obtain the same sequence again
+fil.seed('whatever');
+fil.generate('start');  // d
+fil.generate('start');  // b
+fil.generate('start');  // a
+```
+
+Any change to your Filigree rule source code will have a butterfly effect which results in new, different results for a certain seed.  In other words, the output is only repeatable if the Filigree rules stay the same.  Also each call to `generate` moves further into the sequence of random numbers, so for maximum repeatability you should set the seed just before every call to `generate`.
+
+When making random choices, Filigree avoids choosing the same item twice in a row (either within a rule or across multiple calls to `generate`).  This works best if you don't reset the seed often, since that clears the memory of which items have been recently chosen.
 
 ## Developing
 
