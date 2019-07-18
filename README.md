@@ -1,9 +1,16 @@
 
 # Filigree
 
-A language for generating text using text expansion rules, similar to [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots!
+A language for generating text using text expansion rules, similar to [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots or generate poetry!
 
-Try it on the [online playground site](https://cinnamon-bun.github.io/filigree-website/), or clone the [example project on Glitch](https://glitch.com/~filigree-playground).
+![screenshot](screenshot.png)
+
+## Try it
+
+Write Filigree grammars in your browser with the [online editor](https://cinnamon-bun.github.io/filigree-website/).  Source code for that is [here](https://github.com/cinnamon-bun/filigree-website).
+
+There's also an [example project you can clone on Glitch](https://glitch.com/~filigree-playground), which is nice because it remembers your grammars.
+Source code for that is also [here on Github](https://github.com/cinnamon-bun/filigree-simple-website), and you can see its output page [here on Glitch](https://filigree-playground.glitch.me/).
 
 ## Table of contents
 
@@ -38,7 +45,9 @@ Generating the "tweet" rule gives outputs like this:
 
 ```
 @apple: What a nice day!
+
 @cherry: I am hungry for a banana pudding!
+
 @cherry: I am hungry for a apple pudding!
 ```
 
@@ -46,6 +55,7 @@ Generating the "tweet" rule gives outputs like this:
 
 ```python
 # A Filigree file is a list of text-expansion rules.
+# Their order in the file does not matter.
 
 # Define a rule.  The right side is like a string but without quote marks.
 job = candlestick maker
@@ -177,7 +187,7 @@ The graph only shows rules, not individual pieces of rules.
 
 ## Usage in Javascript
 
-Filigree is written in Typescript and comes with Typescript definitions.  It ought to work in the browser but this is not tested yet.
+Filigree is written in Typescript and comes with Typescript definitions.  It runs in the browser and in node.js.
 
 ```typescript
 import Filigree from 'filigree-text';
