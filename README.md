@@ -249,7 +249,9 @@ a   // box -> a box, apple -> an apple
 
 // whitespace
 trim         // " hello " -> "hello"   (remove leading and trailing spaces)
-mergeSpaces  // " a    b " -> " a b "  (combine consecutive spaces into a single space)
+trimleft     // " hello " -> "hello "
+trimright    // " hello " -> " hello"
+mergespaces  // " a    b " -> " a b "  (combine consecutive spaces into a single space)
 
 // case
 uppercase    // exAMPLE INput -> EXAMPLE INPUT

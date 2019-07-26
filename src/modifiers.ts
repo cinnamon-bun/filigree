@@ -54,7 +54,9 @@ export let makeModifiers = () => ({
     },
 
     trim: (input : string) => input.trim(),
-    mergeSpaces: (input : string) => {
+    trimleft: (input : string) => input.trimLeft(),
+    trimright: (input : string) => input.trimRight(),
+    mergespaces: (input : string) => {
         // replace consecutive spaces with one space
         return repeatModUntilNoChange(input, (input) => {
             return input.split('  ').join(' ');

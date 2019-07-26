@@ -14,7 +14,15 @@ t = exaMPLE phrASE
 caseExamples = CASE\noriginal: <t>\nuppercase: <t.uppercase>\nlowercase: <t.lowercase>\ntitlecase: <t.titlecase>\nsentencecase: <t.sentencecase>
 
 s = [  a     b ]
-spaceExamples = SPACES\noriginal: -<s>-\ntrim: -<s.trim>-\nmergeSpaces: -<s.mergeSpaces>-
+spaceExamples = SPACES\noriginal: -<s>-\ntrim: -<s.trim>-\nmergespaces: -<s.mergespaces>-
+
+sLead =      leading spaces are preserved
+sTrail = trailing spaces are removed        
+sBrak = [  all spaces in one-line brackets are preserved  ]
+sMultiBrak = [
+	leading and trailing spaces are trimmed from multi-line brackets   
+]
+spaceParseExamples = SPACE PARSING\nleading: -<sLead>-\ntrailing: -<sTrail>-\nbrakets: -<sBrak>-\nmulti-line brackets: -<sMultiBrak>-
 
 h = hello
 bad = BAD\n<h.foo>\n<h.foo.bar>\n<h.titlecase.foo>\n<h.foo.titlecase>
@@ -31,4 +39,4 @@ em3 = <em><em><em>
 emoji = EMOJI\n-<em3>-\ninception: -<em3.inception>-
 
 
-start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<combo>\n\n<newline>\n\n<emoji>\n\n<bad>
+start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<spaceParseExamples>\n\n<fun>\n\n<combo>\n\n<newline>\n\n<emoji>\n\n<bad>
