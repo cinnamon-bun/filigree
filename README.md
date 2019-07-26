@@ -1,7 +1,7 @@
 
 # Filigree
 
-A language for generating text using text expansion rules, similar to [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots or generate poetry!
+A language for generating text using text expansion rules, inspired by [Tracery](https://github.com/galaxykate/tracery).  Use this to build bots or generate poetry!
 
 ![screenshot](screenshot.png)
 
