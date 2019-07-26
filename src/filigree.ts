@@ -214,13 +214,17 @@ export class Filigree {
         } else if (expr.kind === 'ref') {
             let x = this.rules[expr.name];
             if (x === undefined) {
-                return '<' + expr.name + '>';  // rule name not found
+                // rule name not found
+                return this._toStringFExpr(expr);
             } else {
                 // TODO: test for stack overflow
-                // TODO: warn on bad modifier name
                 result = this._evalFExpr(x, wrapperFn);
                 for (let modName of expr.mods) {
-                    let modFn = this.modifiers[modName] || ( (x : string) => x);
+                    let modFn = this.modifiers[modName];
+                    if (modFn === undefined) {
+                        // modifier not found
+                        return this._toStringFExpr(expr);
+                    }
                     result = modFn(result);
                 }
                 if (wrapperFn !== undefined) {

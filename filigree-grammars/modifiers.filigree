@@ -23,4 +23,12 @@ fun = FUN\noriginal: <h>\ninception: <h.inception>\nwackycase: <h.wackycase>
 
 combo = COMBO\nbox.uppercase.s: <box.uppercase.s>\nbox.s.uppercase: <box.s.uppercase>
 
-start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<combo>\n\n<bad>
+nltest = line1\nline2
+newline = NEWLINE\ninception should work with a newline in it: <nltest.inception>
+
+em = [⭐️/🌙/✨/🍃/🌱]
+em3 = <em><em><em>
+emoji = EMOJI\n-<em3>-\ninception: -<em3.inception>-
+
+
+start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<combo>\n\n<newline>\n\n<emoji>\n\n<bad>
