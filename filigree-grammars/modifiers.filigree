@@ -1,3 +1,9 @@
+apple = apple
+box = box
+
+sExamples = S\n<apple.s>, <box.s>
+aExamples = A\n<apple.a>, <box.a>
+
 t = exaMPLE phrASE
 caseExamples = CASE\noriginal: <t>\nuppercase: <t.uppercase>\nlowercase: <t.lowercase>\ntitlecase: <t.titlecase>\nsentencecase: <t.sentencecase>
 
@@ -9,4 +15,4 @@ bad = BAD\n<h.foo>\n<h.foo.bar>
 
 fun = FUN\noriginal: <h>\ninception: <h.inception>\nwackycase: <h.wackycase>
 
-start = <caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<bad>
+start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<bad>

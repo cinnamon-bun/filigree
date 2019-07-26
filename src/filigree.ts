@@ -144,7 +144,6 @@ let repeatModUntilNoChange = (input : string, fn : (input : string) => string) =
 let makeModifiers = () => ({
     s: (input : string) => input + 's',    // TODO: make this smarter
     a: (input : string) => 'a ' + input,   // TODO: make this smarter
-    ed: (input : string) => input + 'ed',  // TODO: make this smarter
 
     trim: (input : string) => input.trim(),
     mergeSpaces: (input : string) => {

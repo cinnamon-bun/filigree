@@ -246,7 +246,6 @@ Modifiers can only be used inside a `<rule>` reference.
 // grammar
 s   // bat -> bats, box -> boxes
 a   // box -> a box, apple -> an apple
-ed  // jump -> jumped, sit -> sat
 
 // whitespace
 trim         // " hello " -> "hello"   (remove leading and trailing spaces)
