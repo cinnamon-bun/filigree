@@ -278,7 +278,7 @@ fil.modifiers.loud = (input : string) => {
 
 ## Determinism
 
-If there are any choices in you grammar (square brackets), there is an element of randomness.  Normally you will get different random outputs each time you call `generate`.
+If there are any choices in your grammar (square brackets), there is an element of randomness.  Normally you will get different random outputs each time you call `generate`.
 
 You can provide a random seed which will result in the same sequence of randomness every time.
 
