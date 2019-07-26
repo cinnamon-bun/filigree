@@ -1,18 +1,26 @@
+# words to test .s and .a
 apple = apple
 box = box
+bus = bus
+marsh = marsh
+branch = branch
+tomato = tomato
+city = city
 
-sExamples = S\n<apple.s>, <box.s>
+sExamples = S\n<apple.s>, <box.s>, <bus.s>, <marsh.s>, <tomato.s>, <city.s>, <branch.s>
 aExamples = A\n<apple.a>, <box.a>
 
 t = exaMPLE phrASE
 caseExamples = CASE\noriginal: <t>\nuppercase: <t.uppercase>\nlowercase: <t.lowercase>\ntitlecase: <t.titlecase>\nsentencecase: <t.sentencecase>
 
 s = [  a     b ]
-spaceExamples = SPACES\noriginal:-<s>-\ntrim:-<s.trim>\nmergeSpaces:-<s.mergeSpaces>-
+spaceExamples = SPACES\noriginal: -<s>-\ntrim: -<s.trim>-\nmergeSpaces: -<s.mergeSpaces>-
 
 h = hello
-bad = BAD\n<h.foo>\n<h.foo.bar>
+bad = BAD\n<h.foo>\n<h.foo.bar>\n<h.titlecase.foo>\n<h.foo.titlecase>
 
 fun = FUN\noriginal: <h>\ninception: <h.inception>\nwackycase: <h.wackycase>
 
-start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<bad>
+combo = COMBO\nbox.uppercase.s: <box.uppercase.s>\nbox.s.uppercase: <box.s.uppercase>
+
+start = <sExamples>\n\n<aExamples>\n\n<caseExamples>\n\n<spaceExamples>\n\n<fun>\n\n<combo>\n\n<bad>

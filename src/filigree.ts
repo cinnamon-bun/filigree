@@ -1,5 +1,4 @@
 import nearley from 'nearley';
-import titlecase from 'titlecase';
 import seedrandom from 'seedrandom';
 type Rng = any;  // from seedrandom package
 import {
@@ -11,6 +10,9 @@ import {
     FSeq,
 } from './filigreeGrammar';
 import * as filigreeGrammar from './filigreeGrammar';
+import {
+    makeModifiers,
+} from './modifiers';
 
 //--------------------------------------------------------------------------------
 // HELPERS
@@ -131,50 +133,6 @@ let shuffleChoices = (expr : FExpr, rng : Rng) : void => {
         expr.children.forEach(ch => shuffleChoices(ch, rng));
     }
 }
-
-let repeatModUntilNoChange = (input : string, fn : (input : string) => string) => {
-    let prev : string | null = null;
-    while (prev !== input) {
-        prev = input;
-        input = fn(input);
-    }
-    return input;
-};
-
-let makeModifiers = () => ({
-    s: (input : string) => input + 's',    // TODO: make this smarter
-    a: (input : string) => 'a ' + input,   // TODO: make this smarter
-
-    trim: (input : string) => input.trim(),
-    mergeSpaces: (input : string) => {
-        // replace consecutive spaces with one space
-        return repeatModUntilNoChange(input, (input) => {
-            return input.split('  ').join(' ');
-        });
-    },
-
-    uppercase: (input : string) => input.toUpperCase(),
-    lowercase: (input : string) => input.toLowerCase(),
-    titlecase: (input : string) => titlecase(input),
-    sentencecase: (input : string) => {
-        // capitalize first character only
-        if (input.length === 0) { return input; }
-        return input[0].toUpperCase() + input.slice(1);
-    },
-
-    inception: (input : string) => input.toUpperCase().split('').join(' '),  // "hello" -> "H E L L O"
-    wackycase: (input : string) => {
-        // "hello" -> "hElLo"
-        let result : string[] = [];
-        for (let ii = 0; ii < input.length; ii++) {
-            if (ii % 2 === 0) { result.push(input[ii].toLowerCase()); }
-            else { result.push(input[ii].toUpperCase()) }
-        }
-        return result.join('');
-    },
-
-    // TODO: sentencecase
-});
 
 // TODO: we need two kinds of functions, rawTextTransform and ruleWrapper
 // rawTextTransform should only apply to the lowest level literal strings
