@@ -131,12 +131,20 @@ let makeModifiers = () => ({
     s: (input : string) => input + 's',    // TODO: make this smarter
     a: (input : string) => 'a ' + input,   // TODO: make this smarter
     ed: (input : string) => input + 'ed',  // TODO: make this smarter
+
+    trim: (input : string) => input.trim(),
+    collapseWhitespace: (input : string) => input,
+
     uppercase: (input : string) => input.toUpperCase(),
     lowercase: (input : string) => input.toLowerCase(),
-    inception: (input : string) => input.toUpperCase().split('').join(' '),  // "hello" -> "H E L L O"
     titlecase: (input : string) => titlecase(input),
-    trim: (input : string) => input.trim(),
-    collapseWhitespace: (input : string) => input, // TODO: replace consecutive spaces with one space
+    sentencecase: (input : string) => {
+        // capitalize first character only
+        if (input.length === 0) { return input; }
+        return input[0].toUpperCase() + input.slice(1);
+    },
+
+    inception: (input : string) => input.toUpperCase().split('').join(' '),  // "hello" -> "H E L L O"
     wackycase: (input : string) => {
         // "hello" -> "hElLo"
         let result : string[] = [];
@@ -146,6 +154,7 @@ let makeModifiers = () => ({
         }
         return result.join('');
     },
+
     // TODO: sentencecase
 });
 

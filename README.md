@@ -246,18 +246,19 @@ s  // bat -> bats, box -> boxes
 a  // box -> a box, apple -> an apple
 ed  // jump -> jumped, sit -> sat
 
+// whitespace
+trim       // " hello " -> "hello"   (removes leading and trailing spaces)
+collapseWhitespace  // a    b -> a b  (combine consecutive spaces into a single space)
+
 // case
-uppercase  // exAMPLE INput -> EXAMPLE INPUT
-lowercase  // exAMPLE INput -> example input
-titlecase  // exAMPLE INput -> Example Input
+uppercase    // exAMPLE INput -> EXAMPLE INPUT
+lowercase    // exAMPLE INput -> example input
+titlecase    // exAMPLE INput -> Example Input  (capitalize first letter of each word)
+sentencecase // exAMPLE INput -> Example INput  (capitalize first character only)
 
 // fun
 inception  // hello -> H E L L O
 wackycase  // hello world -> hElLo wOrLd
-
-// whitespace
-trim       // " hello " -> "hello"   (removes leading and trailing spaces)
-collapseWhitespace  // a    b -> a b  (combine consecutive spaces into a single space)
 ```
 
 ### Adding your own custom modifiers
