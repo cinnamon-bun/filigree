@@ -1,3 +1,7 @@
 t = exaMPLE phrASE
 caseExamples = original: <t>\nuppercase: <t.uppercase>\nlowercase: <t.lowercase>\ntitlecase: <t.titlecase>\nsentencecase: <t.sentencecase>\nunknown: <t.foo>
-start = <caseExamples>
+
+s = [  a     b ]
+spaceExamples = original:-<s>-\ntrim:-<s.trim>\nmergeSpaces:-<s.mergeSpaces>-
+
+start = <caseExamples>\n<spaceExamples>

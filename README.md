@@ -242,13 +242,13 @@ Modifiers can only be used inside a `<rule>` reference.
 
 ```typescript
 // grammar
-s  // bat -> bats, box -> boxes
-a  // box -> a box, apple -> an apple
+s   // bat -> bats, box -> boxes
+a   // box -> a box, apple -> an apple
 ed  // jump -> jumped, sit -> sat
 
 // whitespace
-trim       // " hello " -> "hello"   (removes leading and trailing spaces)
-collapseWhitespace  // a    b -> a b  (combine consecutive spaces into a single space)
+trim         // " hello " -> "hello"   (remove leading and trailing spaces)
+mergeSpaces  // " a    b " -> " a b "  (combine consecutive spaces into a single space)
 
 // case
 uppercase    // exAMPLE INput -> EXAMPLE INPUT

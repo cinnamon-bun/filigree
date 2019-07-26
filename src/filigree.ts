@@ -127,13 +127,27 @@ let shuffleChoices = (expr : FExpr, rng : Rng) : void => {
     }
 }
 
+let repeatModUntilNoChange = (input : string, fn : (input : string) => string) => {
+    let prev : string | null = null;
+    while (prev !== input) {
+        prev = input;
+        input = fn(input);
+    }
+    return input;
+};
+
 let makeModifiers = () => ({
     s: (input : string) => input + 's',    // TODO: make this smarter
     a: (input : string) => 'a ' + input,   // TODO: make this smarter
     ed: (input : string) => input + 'ed',  // TODO: make this smarter
 
     trim: (input : string) => input.trim(),
-    collapseWhitespace: (input : string) => input,
+    mergeSpaces: (input : string) => {
+        // replace consecutive spaces with one space
+        return repeatModUntilNoChange(input, (input) => {
+            return input.split('  ').join(' ');
+        });
+    },
 
     uppercase: (input : string) => input.toUpperCase(),
     lowercase: (input : string) => input.toLowerCase(),
