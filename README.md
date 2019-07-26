@@ -118,6 +118,8 @@ a = b   # Comments start with "#" and can go on the same line as a rule.
 
     c = d  # Indentation is allowed and has no meaning
 
+multiline = line1\nline2\nline3  # use "\n" to make a new line in the rule output
+
 # Each rule declaration must be on its own line.  TODO: allow them to span lines
 # Blank lines are ignored.
 # The equals sign must have one space on each side.  TODO: fix this

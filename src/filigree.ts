@@ -93,6 +93,11 @@ let optimizeExprs = (expr : FExpr) : FExpr => {
 
     // TODO: if seq has empty literals, remove them
 
+    // convert two-char "\\n" to actual one-char "\n"
+    if (expr.kind === 'literal') {
+        expr.text = expr.text.split('\\n').join('\n');
+    }
+
     // if seq or choose has only one child, return that child instead
     if ((expr.kind === 'seq' || expr.kind === 'choose') && expr.children.length === 1) {
         return expr.children[0];
